@@ -1,6 +1,6 @@
 const router = require('express').Router()
     , userRoute = require('./users')
-    , taskRoute = require('./task')
+    , taskRoute = require('./tasks')
 
 router.use('/users', userRoute)
 router.use('/tasks', taskRoute)
