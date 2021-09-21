@@ -27,11 +27,11 @@ class TasksController {
     static async getAllTask (req, res) {
         let userData = getUserData(req.headers.token);
         console.log("🚀 ~ file: tasks.js ~ line 28 ~ TasksController ~ getAllTask ~ userData", userData)
-        let userTaskId = userData.id;
+        let userId = userData.id;
 
         const task = await Task.findAll({
             where: {
-                userId: userTaskId
+                userId: userId
             }
         });
         console.log("🚀 ~ file: tasks.js ~ line 35 ~ TasksController ~ getAllTask ~ task ", task )
@@ -58,6 +58,7 @@ class TasksController {
             ]
         })
         return res.status(200).json(task);
+        
     }
 
     static async updateStatus(req,res){
@@ -65,10 +66,12 @@ class TasksController {
         const { id: taskId } = req.params
         const update = await Task.update({
             status : "done"
-        },{where:{
-            userId : id,
-            id : taskId
-        }})
+        },
+        {
+            where:{
+                [Op.and]: [{id: taskId }, {userId: id}]
+            }
+        });
         res.status(200).json("success")
     }
 
@@ -76,13 +79,10 @@ class TasksController {
         const { id, gender } = getUserData(req.headers.token)
         const { id: taskId } = req.params
 
-        if (gender !== 'female') {
-            res.status(403).json({ message: "forbidden access to this endpoint"})
-        }
+        if (gender !== 'female') res.status(403).json({ message: "forbidden access to this endpoint"});
         const task = await Task.destroy({
             where:{
-                userId : id,
-                id : taskId
+                [Op.and]: [{id: taskId }, {userId: id}]
             }
         })
         res.status(200).json("success")

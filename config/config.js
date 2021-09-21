@@ -1,10 +1,10 @@
 require('dotenv').config()
 
-module.exports =
+module.exports=
 {
   "development": {
-    "username": "postgres",
-    "password": "111215",
+    "username": process.env.DB_USER,
+    "password": process.env.DB_PASS,
     "database": "delete_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
